@@ -7,7 +7,13 @@
 //
 
 import Foundation
+import GoogleMaps
 
 struct Constants{
-    
+    struct MapView{
+        static let maxDistance = 9000000.0
+        static let local_zoom = 10.0 as Float
+        static let path_animation_tdelta = 0.0008
+        
+    };
 };

@@ -114,7 +114,6 @@ class Head_Image : UIImageView
             self.transform = CGAffineTransform(scaleX: 1, y: 0.0001)
             
         }){ (finished) in
-            print("hi")
             self.shapeLayer.removeFromSuperlayer()
             self.shapeLayer2.removeFromSuperlayer()
         }

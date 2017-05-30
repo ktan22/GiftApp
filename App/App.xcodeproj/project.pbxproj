@@ -75,10 +75,10 @@
 		303072511ECC707200A732E0 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				30AD25DE1EDCB14E00695264 /* Constants.swift */,
 				30AD25D81EDCB05F00695264 /* ViewController.swift */,
 				30AD25D61EDCB05F00695264 /* Head_Image.swift */,
 				303072561ECC707200A732E0 /* Main.storyboard */,
-				30AD25DE1EDCB14E00695264 /* Constants.swift */,
 				30AD25D51EDCB05F00695264 /* Dialogue_Label.swift */,
 				30AD25D01EDCB02700695264 /* Assets.xcassets */,
 				30AD25D21EDCB05400695264 /* AppDelegate.swift */,
