@@ -29,6 +29,11 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     var true_line = GMSPolyline()
     var line = GMSPolyline()
     //end
+    
+    //Animation Variables
+    var meterDistance = 0
+    var isTimerRunning = false
+    //end
 
 
     //Outlets
@@ -43,7 +48,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     //Actions
     @IBAction func untrack(_ sender: Any) {
         
-        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning)
+        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning)
         {
             return
         }
@@ -69,7 +74,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     }
     
     @IBAction func track(_ sender: Any) {
-        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning)
+        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning)
         {
             return
         }
@@ -94,28 +99,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         
         create_initial_path()
         
-        let position = CLLocationCoordinate2D(latitude: otherLocation.coordinate.latitude, longitude: otherLocation.coordinate.longitude)
-        let kyle = GMSMarker(position: position)
-        kyle.title = "Kyle"
-        kyle.icon = UIImage(named: "goal_face")
-        kyle.map = mapView
-        
-        let meterDistance = locationManager.location?.distance(from: otherLocation);
-        
-        var text = "Your distance to me is \(Int(meterDistance!)) meters!\n"
-        text.append(parseDistanceText(distance: Int(meterDistance!)))
-        distanceLabel.text = ""
-        distanceLabel.numberOfLines = 4
-        self.view.insertSubview(distanceLabel, aboveSubview: self.mapView)
-        distanceLabel.animate(newText: text, characterDelay: 0.07)
-        distanceLabel.isHidden = false
-        
-        self.view.insertSubview(headImageView, aboveSubview: self.mapView)
-        headImageView.animate(repetitions: 1)
-        
-        self.view.insertSubview(dialogue, aboveSubview: self.mapView)
-        dialogue.isHidden = false
-        
+        self.meterDistance = Int((locationManager.location?.distance(from: otherLocation))!);
     }
 
     override func viewDidLoad() {
@@ -161,7 +145,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     }
     
     
-    func parseDistanceText(distance: Int) -> String
+    func parseDistanceText(distance: Int) -> String //Fill in with more words later
     {
         var s = ""
         
@@ -188,6 +172,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     func animate_path()
     {
         if (UInt(count) < path.count()) {
+            isTimerRunning = true
             let c = self.path.coordinate(at: UInt(count))
             true_path.add(c)
             self.true_line.path = self.true_path
@@ -204,6 +189,8 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         else {
             count = 0;
             self.path_timer.invalidate()
+            goal_animation()
+            isTimerRunning = false
         }
     }
     
@@ -215,6 +202,29 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         line.strokeWidth = 7
         
         self.path_timer = Timer.scheduledTimer(timeInterval: Constants.MapView.path_animation_tdelta, target: self, selector: (#selector(ViewController.animate_path)), userInfo: nil, repeats: true)
+    }
+    
+    func goal_animation()
+    {
+        let position = CLLocationCoordinate2D(latitude: otherLocation.coordinate.latitude, longitude: otherLocation.coordinate.longitude)
+        let kyle = GMSMarker(position: position)
+        kyle.title = "Kyle"
+        kyle.icon = UIImage(named: "goal_face")
+        kyle.map = mapView
+        
+        var text = "Your distance to me is \(meterDistance) meters!\n"
+        text.append(parseDistanceText(distance: meterDistance))
+        distanceLabel.text = ""
+        distanceLabel.numberOfLines = 4
+        self.view.insertSubview(distanceLabel, aboveSubview: self.mapView)
+        distanceLabel.animate(newText: text, characterDelay: 0.07)
+        distanceLabel.isHidden = false
+        
+        self.view.insertSubview(headImageView, aboveSubview: self.mapView)
+        headImageView.animate(repetitions: 1)
+        
+        self.view.insertSubview(dialogue, aboveSubview: self.mapView)
+        dialogue.isHidden = false
     }
     
 
