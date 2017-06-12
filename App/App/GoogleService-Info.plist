@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>344074025505-bjei1ttm0v60h8fgk1f5clo3nl9issd3.apps.googleusercontent.com</string>
+	<string>409836143934-vq60035uhb9u4uc9285lf9e6esdttsjd.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.344074025505-bjei1ttm0v60h8fgk1f5clo3nl9issd3</string>
+	<string>com.googleusercontent.apps.409836143934-vq60035uhb9u4uc9285lf9e6esdttsjd</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDcbE8giUqkdn3EVksioBvzxER1ZtO4pGM</string>
+	<string>AIzaSyC6HqGuhu5xlbFG4mMW7wDTGkFJfgEPMqg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>344074025505</string>
+	<string>409836143934</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.Kyle.ios</string>
+	<string>Kyle</string>
 	<key>PROJECT_ID</key>
-	<string>application-1495018841184</string>
+	<string>kyle-8606a</string>
 	<key>STORAGE_BUCKET</key>
-	<string>application-1495018841184.appspot.com</string>
+	<string>kyle-8606a.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:344074025505:ios:050a75241383e158</string>
+	<string>1:409836143934:ios:ecf253afb4f38a40</string>
 	<key>DATABASE_URL</key>
-	<string>https://application-1495018841184.firebaseio.com</string>
+	<string>https://kyle-8606a.firebaseio.com</string>
 </dict>
 </plist>

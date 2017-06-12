@@ -9,6 +9,8 @@
 import UIKit
 import GoogleMaps
 import CoreLocation
+import Firebase
+import FirebaseDatabase
 
 class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDelegate{
 
@@ -16,7 +18,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     var locationManager = CLLocationManager()
     lazy var mapView = GMSMapView()
     var curLocation = CLLocationCoordinate2D()
-    let otherLocation = CLLocation(latitude: 39.448178953526, longitude: -122.13945301261) //Constant for now
+    var otherLocation = CLLocation(latitude: 39.448178953526, longitude: -122.13945301261) //Constant for now
     var initial = true
     var shapeLayer = CAShapeLayer()
     //End
@@ -33,8 +35,15 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     //Animation Variables
     var meterDistance = 0
     var isTimerRunning = false
+    var tracking = false
     //end
-
+    
+    //Option Variables
+    let alert = UIAlertController(title: "WARNING", message: "Do you really want to be creepy by following me?", preferredStyle: UIAlertControllerStyle.alert)
+    //end
+    
+    //database reference
+    var ref: DatabaseReference!
 
     //Outlets
     @IBOutlet weak var untrackButton: UIButton!
@@ -48,7 +57,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     //Actions
     @IBAction func untrack(_ sender: Any) {
         
-        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning)
+        if( (headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning) || !tracking )
         {
             return
         }
@@ -71,35 +80,16 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         true_line = GMSPolyline()
         line = GMSPolyline()
         
+        tracking = false
     }
     
     @IBAction func track(_ sender: Any) {
-        if(headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning)
+        if( (headImageView.isTimerRunning || distanceLabel.isTimerRunning || self.isTimerRunning) || tracking )
         {
             return
         }
-        
-        //new path draw
-        let userLocation = curLocation
-        let kyleLocation = otherLocation.coordinate
-        let vector = (kyleLocation.latitude - userLocation.latitude , kyleLocation.longitude - userLocation.longitude)
-        
-        //equations
-        path.add(userLocation)
-        for index in 1...1000
-        {
-            let delta_x = (CLLocationDegrees(index)/CLLocationDegrees(1000))*vector.0
-            let delta_y = (CLLocationDegrees(index)/CLLocationDegrees(1000))*vector.1
-            let x = userLocation.latitude + delta_x
-            let y = userLocation.longitude + delta_y
-            path.add(CLLocationCoordinate2D(latitude: x, longitude: y))
-        }
-        path.add(kyleLocation)
-        //equations end
-        
-        create_initial_path()
-        
-        self.meterDistance = Int((locationManager.location?.distance(from: otherLocation))!);
+        //alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     override func viewDidLoad() {
@@ -123,6 +113,29 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         //trackButton.removeFromSuperview()
         self.view.insertSubview(trackButton, aboveSubview: self.mapView)
         self.view.insertSubview(untrackButton, aboveSubview: self.mapView)
+        
+        //test firebase
+        ref = Database.database().reference()
+        
+        //set other user and listen to other user
+        let newRef = self.ref.child("kyle")
+        newRef.observe(.value, with: { snapshot in
+            let postDict = snapshot.value as? [String : AnyObject] ?? [:]
+            if(!postDict.isEmpty)
+            {
+                let lat = (postDict["lat"] as! NSNumber).floatValue
+                let long = (postDict["long"] as! NSNumber).floatValue
+                let location = CLLocation(latitude: CLLocationDegrees(lat), longitude: CLLocationDegrees(long))
+                self.otherLocation = location
+            }
+        })
+        
+        alert.addAction(UIAlertAction(title: "Yaas, Track Anyways", style: .default, handler: { (void) in
+            self.tracking = true
+            self.record_path()
+        }))
+        alert.addAction(UIAlertAction(title: "Nah, Im not creepy",style: .cancel))
+        
     }
     
     
@@ -136,6 +149,11 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         }
         mapView.isMyLocationEnabled = true
         locationManager.stopUpdatingLocation()
+        
+        //update MY info (Default Kyle for now)
+        let newRef = self.ref.child("fah")
+        newRef.setValue(["lat":curLocation.latitude,"long": curLocation.longitude])
+
     }
     
 
@@ -169,6 +187,8 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
     }
     
     
+    let color_array = [#colorLiteral(red: 0.9784535766, green: 0.6787097454, blue: 0.7884691358, alpha: 1),#colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1),#colorLiteral(red: 0.1152106896, green: 0.3501339257, blue: 0.503962636, alpha: 1),#colorLiteral(red: 0.2659465969, green: 0.7377687097, blue: 0.9586290717, alpha: 1),#colorLiteral(red: 0.3718120456, green: 0.7847277522, blue: 1, alpha: 1)]
+    
     func animate_path()
     {
         if (UInt(count) < path.count()) {
@@ -176,8 +196,8 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
             let c = self.path.coordinate(at: UInt(count))
             true_path.add(c)
             self.true_line.path = self.true_path
-            self.true_line.strokeColor = #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)
-            self.true_line.strokeWidth = 3
+            self.true_line.strokeColor = color_array[(count % 100)/20]
+            self.true_line.strokeWidth = 7
             self.true_line.map = self.mapView
             self.count += 1
             
@@ -199,7 +219,7 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         line = GMSPolyline(path: path)
         //line.map = mapView
         line.strokeColor = .blue
-        line.strokeWidth = 7
+        line.strokeWidth = 15
         
         self.path_timer = Timer.scheduledTimer(timeInterval: Constants.MapView.path_animation_tdelta, target: self, selector: (#selector(ViewController.animate_path)), userInfo: nil, repeats: true)
     }
@@ -225,6 +245,31 @@ class ViewController: UIViewController ,GMSMapViewDelegate,CLLocationManagerDele
         
         self.view.insertSubview(dialogue, aboveSubview: self.mapView)
         dialogue.isHidden = false
+    }
+    
+    func record_path()
+    {
+        //new path draw
+        let userLocation = curLocation
+        let kyleLocation = otherLocation.coordinate
+        let vector = (kyleLocation.latitude - userLocation.latitude , kyleLocation.longitude - userLocation.longitude)
+        self.meterDistance = Int((locationManager.location?.distance(from: otherLocation))!);
+        
+        let intervals = self.meterDistance/100
+        //equations
+        path.add(userLocation)
+        for index in 1...intervals
+        {
+            let delta_x = (CLLocationDegrees(index)/CLLocationDegrees(intervals))*vector.0
+            let delta_y = (CLLocationDegrees(index)/CLLocationDegrees(intervals))*vector.1
+            let x = userLocation.latitude + delta_x
+            let y = userLocation.longitude + delta_y
+            path.add(CLLocationCoordinate2D(latitude: x, longitude: y))
+        }
+        path.add(kyleLocation)
+        //equations end
+        
+        create_initial_path()
     }
     
 

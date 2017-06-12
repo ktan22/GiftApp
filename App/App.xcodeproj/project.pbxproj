@@ -19,6 +19,7 @@
 		30AD25DC1EDCB05F00695264 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30AD25D71EDCB05F00695264 /* Info.plist */; };
 		30AD25DD1EDCB05F00695264 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AD25D81EDCB05F00695264 /* ViewController.swift */; };
 		30AD25DF1EDCB14E00695264 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AD25DE1EDCB14E00695264 /* Constants.swift */; };
+		30C43B951EE4B9460021CC10 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30C43B941EE4B9460021CC10 /* GoogleService-Info.plist */; };
 		A20ED97C0E41561DCDF45624 /* libPods-App.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 367437D02B6FF37EF72EEBA7 /* libPods-App.a */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		30AD25D71EDCB05F00695264 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30AD25D81EDCB05F00695264 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		30AD25DE1EDCB14E00695264 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		30C43B941EE4B9460021CC10 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		367437D02B6FF37EF72EEBA7 /* libPods-App.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-App.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -84,6 +86,7 @@
 				30AD25D21EDCB05400695264 /* AppDelegate.swift */,
 				3030725E1ECC707200A732E0 /* LaunchScreen.storyboard */,
 				30AD25D71EDCB05F00695264 /* Info.plist */,
+				30C43B941EE4B9460021CC10 /* GoogleService-Info.plist */,
 				303072591ECC707200A732E0 /* App.xcdatamodeld */,
 				30AD25B91ECD40EE00695264 /* Podfile */,
 			);
@@ -176,6 +179,7 @@
 				30AD25BA1ECD40EE00695264 /* Podfile in Resources */,
 				303072581ECC707200A732E0 /* Main.storyboard in Resources */,
 				30AD25D11EDCB02700695264 /* Assets.xcassets in Resources */,
+				30C43B951EE4B9460021CC10 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
